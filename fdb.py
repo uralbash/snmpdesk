@@ -20,9 +20,9 @@ def fetchFdb(ip, community):
             #     [(ObjectName(1.3.6.1.2.1.17.7.1.2.2.1.2.5.0.27.144.212.92.45),
             #     Integer(27))]
 
-            data = str(varBindTableRow[0][0]).replace(mib, '').split('.')
+            data = varBindTableRow[0][0]._value[len(value):]
 
-            vlan = data[1]
+            vlan = data[0]
             #mac = '%s' % ':'.join([hex(int(i))[2:] for i in data[-6:]])
             mac = '%02x:%02x:%02x:%02x:%02x:%02x' % tuple(map(int, data[-6:]))
             port = varBindTableRow[0][1]
