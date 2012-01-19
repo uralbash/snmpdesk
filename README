@@ -1,1 +1,3 @@
 python fdb.py <ip> <commynity>
+
+python traffic.py <ip> <community> <'in'/'out'/'ucast'/'nucast'/'discards'/'errors'>
