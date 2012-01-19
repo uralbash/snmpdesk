@@ -1,5 +1,8 @@
 README
 setup.py
+snmpdesk/__init__.py
+snmpdesk/fdb.py
+snmpdesk/traffic.py
 snmpdesk.egg-info/PKG-INFO
 snmpdesk.egg-info/SOURCES.txt
 snmpdesk.egg-info/dependency_links.txt

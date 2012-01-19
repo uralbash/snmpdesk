@@ -1,12 +1,16 @@
 Metadata-Version: 1.1
 Name: snmpdesk
-Version: 0.0.1
+Version: 0.0.4
 Summary: Scripts for easy get snmp data
 Home-page: http://github.com/uralbash/snmpdesk/
 Author: Svincov Dmitry
 Author-email: spam@19216801.ru
 License: GPL
-Description: UNKNOWN
+Description: python fdb.py <ip> <commynity>
+        
+        python traffic.py <ip> <community> <'in'/'out'/'ucast'/'nucast'/'discards'/'errors'>
+        
+Keywords: snmp
 Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
 Classifier: Environment :: Console
