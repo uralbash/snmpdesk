@@ -1,0 +1,7 @@
+README
+setup.py
+snmpdesk.egg-info/PKG-INFO
+snmpdesk.egg-info/SOURCES.txt
+snmpdesk.egg-info/dependency_links.txt
+snmpdesk.egg-info/requires.txt
+snmpdesk.egg-info/top_level.txt
