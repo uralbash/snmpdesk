@@ -6,9 +6,9 @@ def read(fname):
 
 setup(
     name='snmpdesk',
-    version='0.0.4',
+    version='0.0.5',
     description='Scripts for easy get snmp data',
-    author='Svincov Dmitry',
+    author='Svintsov Dmitry',
     author_email='spam@19216801.ru',
     url='http://github.com/uralbash/snmpdesk/',
     keywords = "snmp",
@@ -22,6 +22,7 @@ setup(
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Natural Language :: English',
+        'Natural Language :: Russian',
         'Operating System :: Unix',
         'Programming Language :: Python',
         'Topic :: System :: Networking :: Monitoring',
