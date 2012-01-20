@@ -2,7 +2,7 @@ import sys
 import collections
 from pysnmp.entity.rfc3413.oneliner import cmdgen
 
-def datafrommib(mib):
+def datafrommib(mib, community, ip):
     value = tuple([int(i) for i in mib.split('.')])
     generator = cmdgen.CommandGenerator()
     comm_data = cmdgen.CommunityData('server', community, 1) # 1 means version SNMP v2c
@@ -39,7 +39,7 @@ def load(ip, community):
     ports = collections.defaultdict(dict)
 
     for mib in mibs:
-        for data in datafrommib(mib[0]):
+        for data in datafrommib(mib[0], community, ip):
             ports[data['port']][mib[1]] = int(data['bits'])
 
     return ports
@@ -55,7 +55,6 @@ if __name__ == '__main__':
 
     ports = load(ip, community)
     for key, value in ports.items():
-    #    print 'port: %(port)s speed: %(speed)s type: %(type)s' % traffic
         print key, ('in: %(in)s out: %(out)s ucast: %(ucast)s' +\
                    ' nucast: %(nucast)s discards: %(discards)s' +\
                    'errors: %(errors)s') % value
