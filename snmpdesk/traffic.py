@@ -14,15 +14,16 @@ def datafrommib(mib, community, ip):
 
     if not errorIndication is None  or errorStatus is True:
            print "Error: %s %s %s %s" % res
+           yield None
     else:
         for varBindTableRow in varBindTable:
             # varBindTableRow:
             #   in: [(ObjectName(1.3.6.1.2.1.2.2.1.10.8), Counter32(180283794))]
             data = varBindTableRow[0]
             port = data[0]._value[len(value):]
-            bits = data[1]
+            octets = data[1]
 
-            yield {'port': port[0], 'bits': bits}
+            yield {'port': port[0], 'octets': octets}
 
 def load(ip, community):
     # for use snmptool try:
@@ -39,8 +40,12 @@ def load(ip, community):
     ports = collections.defaultdict(dict)
 
     for mib in mibs:
-        for data in datafrommib(mib[0], community, ip):
-            ports[data['port']][mib[1]] = int(data['bits'])
+        data = datafrommib(mib[0], community, ip)
+        for row in data:
+            if row:
+                ports[row['port']][mib[1]] = int(row['octets'])
+            else:
+                return None
 
     return ports
 
@@ -54,8 +59,9 @@ if __name__ == '__main__':
         sys.exit(0)
 
     ports = load(ip, community)
-    for key, value in ports.items():
-        print key, ('in: %(in)s out: %(out)s ucast: %(ucast)s' +\
-                   ' nucast: %(nucast)s discards: %(discards)s' +\
-                   'errors: %(errors)s') % value
+    if ports:
+        for key, value in ports.items():
+            print key, ('in: %(in)s out: %(out)s ucast: %(ucast)s' +\
+                       ' nucast: %(nucast)s discards: %(discards)s' +\
+                       ' errors: %(errors)s') % value
 
