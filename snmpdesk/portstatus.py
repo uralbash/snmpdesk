@@ -17,25 +17,22 @@ def datafrommib(mib, community, ip):
            yield None
     else:
         for varBindTableRow in varBindTable:
-            # varBindTableRow:
-            #   in: [(ObjectName(1.3.6.1.2.1.2.2.1.10.8), Counter32(180283794))]
             data = varBindTableRow[0]
             port = data[0]._value[len(value):]
             octets = data[1]
 
             yield {'port': port[0], 'octets': octets}
 
-def load(ip, community):
+def status(ip, community):
     # for use snmptool try:
-    # In: snmpwalk -c mymypub -v2c <ip> 1.3.6.1.2.1.2.2.1.10.2
-    # Out: snmpwalk -c mymypub -v2c <ip> 1.3.6.1.2.1.2.2.1.16.2
+    # snmpwalk -c mymypub -v2c <ip> <mib>
     # e.t.c...
-    mibs = [('1.3.6.1.2.1.2.2.1.16', 'out'),
-            ('1.3.6.1.2.1.2.2.1.10', 'in'),
-            ('1.3.6.1.2.1.2.2.1.11', 'ucast'),
-            ('1.3.6.1.2.1.2.2.1.12', 'nucast'),
-            ('1.3.6.1.2.1.2.2.1.13', 'discards'),
-            ('1.3.6.1.2.1.2.2.1.14', 'errors')]
+    mibs = [('1.3.6.1.2.1.2.2.1.8', 'ifOperStatus'),
+            ('1.3.6.1.2.1.2.2.1.3', 'ifType'),
+            ('1.3.6.1.2.1.2.2.1.5', 'ifSpeed'),
+            ('1.3.6.1.2.1.31.1.1.1.1', 'ifName'),
+            ('1.3.6.1.2.1.31.1.1.1.18', 'ifAlias')
+            ]
 
     ports = collections.defaultdict(dict)
 
@@ -43,7 +40,7 @@ def load(ip, community):
         data = datafrommib(mib[0], community, ip)
         for row in data:
             if row:
-                ports[row['port']][mib[1]] = int(row['octets'])
+                ports[row['port']][mib[1]] = row['octets']
             else:
                 return None
 
@@ -55,13 +52,13 @@ if __name__ == '__main__':
         community = sys.argv[2]
     except IndexError:
         print "Please run command like:"
-        print "python %s <ip> <community>" % __file__
+        print "python %s <ip> <community>" % (__file__)
         sys.exit(0)
 
-    ports = load(ip, community)
+    ports = status(ip, community)
     if ports:
         for key, value in ports.items():
-            print key, ('in: %(in)s out: %(out)s ucast: %(ucast)s' +\
-                       ' nucast: %(nucast)s discards: %(discards)s' +\
-                       ' errors: %(errors)s') % value
+            print key, ('ifOperStatus: %(ifOperStatus)s ifType: %(ifType)s' +\
+                        ' ifSpeed: %(ifSpeed)s ifName: %(ifName)s' +\
+                        ' ifAlias: %(ifAlias)s') % value
 

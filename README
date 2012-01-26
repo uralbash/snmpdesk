@@ -13,3 +13,5 @@ Use
 python fdb.py <ip> <commynity>
 
 python traffic.py <ip> <community>
+
+python portstatus <ip> <community>

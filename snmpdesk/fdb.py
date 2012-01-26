@@ -34,7 +34,7 @@ if __name__ == '__main__':
         community = sys.argv[2]
     except IndexError:
         print "PLease run command like:"
-        print "python fdb.py <ip> <community>"
+        print "python %s <ip> <community>" % __file__
         sys.exit(0)
 
     for fdb in fetchFdb(ip, community):

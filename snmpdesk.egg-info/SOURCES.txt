@@ -2,6 +2,7 @@ README
 setup.py
 snmpdesk/__init__.py
 snmpdesk/fdb.py
+snmpdesk/portstatus.py
 snmpdesk/traffic.py
 snmpdesk.egg-info/PKG-INFO
 snmpdesk.egg-info/SOURCES.txt
