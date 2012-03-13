@@ -2,7 +2,7 @@ import sys
 import collections
 from pysnmp.entity.rfc3413.oneliner import cmdgen
 
-def datafrommib(mib, community, ip):
+'''def datafrommib(mib, community, ip):
     value = tuple([int(i) for i in mib.split('.')])
     generator = cmdgen.CommandGenerator()
     comm_data = cmdgen.CommunityData('server', community, 1) # 1 means version SNMP v2c
@@ -24,12 +24,38 @@ def datafrommib(mib, community, ip):
             octets = data[1]
 
             yield {'port': port[0], 'octets': octets}
+'''
+
+def datafrommib(mib, community, conn):
+    value = tuple([int(i) for i in mib.split('.')])
+    #res = (errorIndication, errorStatus, errorIndex, varBindTable)\
+    #        = real_fun(comm_data, transport, value)
+    res = (errorIndication, errorStatus, errorIndex, varBindTable)\
+            = conn[3](conn[1], conn[2])
+
+    if not errorIndication is None  or errorStatus is True:
+           print "Error: %s %s %s %s" % res
+           yield None
+    else:
+        for varBindTableRow in varBindTable:
+            # varBindTableRow:
+            #   in: [(ObjectName(1.3.6.1.2.1.2.2.1.10.8), Counter32(180283794))]
+            data = varBindTableRow[0]
+            port = data[0]._value[len(value):]
+            octets = data[1]
+
+            yield {'port': port[0], 'octets': octets}
 
 def load(ip, community):
     # for use snmptool try:
     # In: snmpwalk -c mymypub -v2c <ip> 1.3.6.1.2.1.2.2.1.10.2
     # Out: snmpwalk -c mymypub -v2c <ip> 1.3.6.1.2.1.2.2.1.16.2
     # e.t.c...
+    generator = cmdgen.CommandGenerator()
+    comm_data = cmdgen.CommunityData('server', community, 1) # 1 means version SNMP v2c
+    transport = cmdgen.UdpTransportTarget((ip, 161))
+    real_fun = getattr(generator, 'nextCmd')
+    conn = (generator, comm_data, transport, real_fun)
     mibs = [('1.3.6.1.2.1.2.2.1.16', 'out'),
             ('1.3.6.1.2.1.2.2.1.10', 'in'),
             ('1.3.6.1.2.1.2.2.1.11', 'ucast'),
@@ -40,7 +66,7 @@ def load(ip, community):
     ports = collections.defaultdict(dict)
 
     for mib in mibs:
-        data = datafrommib(mib[0], community, ip)
+        data = datafrommib(mib[0], community, conn)
         for row in data:
             if row:
                 ports[row['port']][mib[1]] = int(row['octets'])
@@ -57,7 +83,9 @@ if __name__ == '__main__':
         print "Please run command like:"
         print "python %s <ip> <community>" % __file__
         sys.exit(0)
-
+    # == debug ==
+    #import profile
+    #profile.run("load('%s', '%s')" % (ip, community))
     ports = load(ip, community)
     if ports:
         for key, value in ports.items():
