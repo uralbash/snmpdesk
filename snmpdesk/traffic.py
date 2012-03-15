@@ -31,7 +31,7 @@ def datafrommib(mib, community, conn):
     #res = (errorIndication, errorStatus, errorIndex, varBindTable)\
     #        = real_fun(comm_data, transport, value)
     res = (errorIndication, errorStatus, errorIndex, varBindTable)\
-            = conn[3](conn[1], conn[2])
+            = conn[3](conn[1], conn[2], value)
 
     if not errorIndication is None  or errorStatus is True:
            print "Error: %s %s %s %s" % res

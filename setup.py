@@ -6,7 +6,7 @@ def read(fname):
 
 setup(
     name='snmpdesk',
-    version='0.0.8',
+    version='0.0.91',
     description='Scripts for easy get snmp data',
     author='Svintsov Dmitry',
     author_email='spam@19216801.ru',
